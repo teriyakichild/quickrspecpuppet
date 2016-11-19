@@ -24,6 +24,7 @@ class ManifestParser(object):
             if any(matches):
                 resources['classes'] = self.parse_resources('class', filepath)
                 resources['files'] = self.parse_resources('file', filepath)
+                resources['packages'] = self.parse_resources('package', filepath)
                 self.classes.append(PuppetClass(matches[0], filepath, resources, self._directory))
 
     def parse_resources(self, resource_type, filepath):

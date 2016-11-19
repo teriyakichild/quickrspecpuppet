@@ -28,8 +28,11 @@ describe '{{ name }}' do
       :tier                      => 'prod'
     }
     end
-{% for resource in resources['classes'] %}    it { should contain_class('{{ resource }}') }\n{% endfor %}
-{% for resource in resources['files'] %}    it { should contain_file('{{ resource }}') }\n{% endfor %}
+    it { is_expected.to compile }
+
+{% for resource in resources['classes'] %}    it { is_expected.to contain_class('{{ resource }}') }\n{% endfor %}
+{% for resource in resources['files'] %}    it { is_expected.to contain_file('{{ resource }}') }\n{% endfor %}
+{% for resource in resources['packages'] %}    it { is_expected.to contain_package('{{ resource }}') }\n{% endfor %}
   end
 end
 """)
