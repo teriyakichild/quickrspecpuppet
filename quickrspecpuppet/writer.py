@@ -44,7 +44,7 @@ class TestWriter(object):
         else:
             flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
         for each in self.classes:
-            print os.path.basename(each.test_filepath)
+            logger.info('Writing {0}'.format(os.path.basename(each.test_filepath)))
 	    if not os.path.exists(os.path.dirname(each.test_filepath)):
 		os.makedirs(os.path.dirname(each.test_filepath))
 	    try:

@@ -12,7 +12,6 @@ class ManifestParser(object):
 
     def find_manifests(self):
         manifests = []
-        print 
         for dirpath, dirnames, filenames in os.walk('{0}/{1}'.format(self._directory, 'manifests')):
             for filename in [f for f in filenames if f.endswith(".pp")]:
                 manifests.append(os.path.join(dirpath, filename))
