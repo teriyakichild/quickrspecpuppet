@@ -1,0 +1,6 @@
+*.pyc
+quickrspecpuppet.egg-info
+build
+dist
+rpm-build
+rpms

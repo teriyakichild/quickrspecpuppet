@@ -1,0 +1,2 @@
+recursive-include quickrspecpuppet
+include README.md requirements.txt
