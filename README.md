@@ -17,6 +17,7 @@ Run `quickrspecpuppet` in the root directory of your puppet module:
 
 Quickly create basic rspec tests for your puppet modules
 
+```
 Usage:
   quickrspecpuppet [ --directory=DIRECTORY ] [ --force ] [ --verbose ]
   quickrspecpuppet (-h | --help)
@@ -26,6 +27,7 @@ Options:
   -f, --force               Overwrite tests if they exist
   -v, --verbose             Enable verbose logging
   -h, --help                Show this screen.
+```
 
 ## Packaging
 
