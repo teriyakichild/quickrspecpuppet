@@ -18,6 +18,7 @@ from quickrspecpuppet.writer import TestWriter
 
 from docopt import docopt
 
+
 def main():
     # instanstiate logger
     logger = logging.getLogger('quickrspecpuppet')
@@ -26,7 +27,7 @@ def main():
 
     # Parse command line arguments
     arguments = docopt(__doc__, version=__version__)
-    
+
     if arguments['--verbose']:
         logger.info('Setting log level to DEBUG')
         logger.setLevel(logging.DEBUG)

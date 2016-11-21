@@ -44,24 +44,29 @@ fixtures_template = Template("""fixtures:
     {{ module_name }}: "#{source_dir}"
 """)
 
+
 class TestWriter(object):
+
     def __init__(self, parser):
         self.classes = parser.classes
         self.dependencies = parser.dependencies
-        self.fixtures_path = '{0}/{1}'.format(parser._directory, '/.fixtures.yml')
+        self.fixtures_path = '{0}/{1}'.format(
+            parser._directory, '/.fixtures.yml')
         self.class_name = parser.class_name
         self.force = False
 
     def write_tests(self):
         for each in self.classes:
-            logger.info('Writing {0}'.format(os.path.basename(each.test_filepath)))
-	    if not os.path.exists(os.path.dirname(each.test_filepath)):
+            logger.info('Writing {0}'.format(
+                os.path.basename(each.test_filepath)))
+            if not os.path.exists(os.path.dirname(each.test_filepath)):
                 os.makedirs(os.path.dirname(each.test_filepath))
             template_args = {'resources': each.resources, 'name': each.name}
-	    self.write(each.test_filepath, spec_template, template_args)
+            self.write(each.test_filepath, spec_template, template_args)
 
     def write_fixtures(self):
-        template_args = {'git_modules': self.dependencies, 'module_name': self.class_name}
+        template_args = {'git_modules': self.dependencies,
+                         'module_name': self.class_name}
         self.write(self.fixtures_path, fixtures_template, template_args)
 
     def write(self, filepath, template, template_args):
@@ -69,17 +74,18 @@ class TestWriter(object):
             flags = os.O_CREAT | os.O_RDWR | os.O_TRUNC
         else:
             flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
-	try:
+        try:
             file_handle = os.open(filepath, flags)
-	except OSError as e:
-	    if e.errno == errno.EEXIST:  # Failed as the file already exists.
-                logger.warn('Warning: {0} already exists. Use force option to overwrite existing files'.format(filepath))
-		pass
-	    else:  # Something unexpected went wrong so reraise the exception.
-		raise
-	else:  # No exception, so the file must have been created successfully.
-	    with os.fdopen(file_handle, 'w') as file_obj:
-		# Using `os.fdopen` converts the handle to an object that acts like a
-		# regular Python file object, and the `with` context manager means the
-		# file will be automatically closed when we're done with it.
-		file_obj.write(template.render(**template_args))
+        except OSError as e:
+            if e.errno == errno.EEXIST:  # Failed as the file already exists.
+                logger.warn(
+                    'Warning: {0} already exists. Use force option to overwrite existing files'.format(filepath))
+                pass
+            else:  # Something unexpected went wrong so reraise the exception.
+                raise
+        else:  # No exception, so the file must have been created successfully.
+            with os.fdopen(file_handle, 'w') as file_obj:
+                # Using `os.fdopen` converts the handle to an object that acts like a
+                # regular Python file object, and the `with` context manager means the
+                # file will be automatically closed when we're done with it.
+                file_obj.write(template.render(**template_args))
