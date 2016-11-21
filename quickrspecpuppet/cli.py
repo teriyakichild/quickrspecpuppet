@@ -34,8 +34,10 @@ def main():
     parser = ManifestParser(directory=arguments['--directory'])
     parser.parse()
 
-    writer = TestWriter(parser.classes)
-    writer.write(force=arguments['--force'])
+    writer = TestWriter(parser)
+    writer.force = arguments['--force']
+    writer.write_tests()
+    writer.write_fixtures()
 
 if __name__ == '__main__':
     main()
