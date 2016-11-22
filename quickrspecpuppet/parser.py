@@ -16,6 +16,7 @@ class ManifestParser(object):
             directory = os.getcwd()
         self._directory = directory
         self._manifests = self.find_manifests()
+        self.class_name = None
 
     def find_manifests(self):
         manifests = []
