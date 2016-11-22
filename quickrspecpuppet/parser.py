@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import os.path
+import re
 import regex
 
 logger = logging.getLogger('quickrspecpuppet')
@@ -91,12 +92,11 @@ class PuppetClass(object):
 class PuppetDependency(object):
 
     def __init__(self, name):
-        name_parts = name.split('/')
+        name_parts = re.split('[/-]', name)
         try:
             self.url = 'git@github.com:{0}/{1}.git'.format(*name_parts)
         except IndexError:
             raise Exception(
                 'Invalid format for puppet module name ({0}), should be "owner/repo_name"'.format(name))
         logger.debug('DEBUG: parsed dependency as {0}'.format(self.url))
-        self.url = 'git@github.com:{0}/{1}.git'.format(*name.split('/'))
         self.name = name_parts[1]
