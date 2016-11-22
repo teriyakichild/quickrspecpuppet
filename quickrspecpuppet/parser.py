@@ -59,7 +59,11 @@ class ManifestParser(object):
         metadata_path = '{0}/{1}'.format(self._directory, 'metadata.json')
         if os.path.exists(metadata_path):
             logger.debug('DEBUG: metadata {0} exists'.format(metadata_path))
-            metadata = json.loads(open(metadata_path, 'r').read())
+            try:
+                metadata = json.loads(open(metadata_path, 'r').read())
+            except ValueError as e:
+                metadata = {}
+                logger.warning('Warning: failed to load metadata.json: {0}'.format(e))
             return [each['name'] for each in metadata.get('dependencies', [])]
         return []
 
