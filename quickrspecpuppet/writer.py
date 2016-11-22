@@ -51,11 +51,16 @@ class TestWriter(object):
         self.classes = parser.classes
         self.dependencies = parser.dependencies
         self.fixtures_path = '{0}/{1}'.format(
-            parser._directory, '/.fixtures.yml')
+            parser.directory, '/.fixtures.yml'  # TODO: Why are we using a protected member here?
+        )
         self.class_name = parser.class_name
         self.force = False
 
     def write_tests(self):
+        """
+
+        :return:
+        """
         for each in self.classes:
             logger.info('Writing {0}'.format(
                 os.path.basename(each.test_filepath)))
@@ -65,11 +70,22 @@ class TestWriter(object):
             self.write(each.test_filepath, spec_template, template_args)
 
     def write_fixtures(self):
+        """
+
+        :return:
+        """
         template_args = {'git_modules': self.dependencies,
                          'module_name': self.class_name}
         self.write(self.fixtures_path, fixtures_template, template_args)
 
     def write(self, filepath, template, template_args):
+        """
+
+        :param filepath:
+        :param template:
+        :param template_args:
+        :return:
+        """
         if self.force:
             flags = os.O_CREAT | os.O_RDWR | os.O_TRUNC
         else:
@@ -79,7 +95,8 @@ class TestWriter(object):
         except OSError as e:
             if e.errno == errno.EEXIST:  # Failed as the file already exists.
                 logger.warn(
-                    'Warning: {0} already exists. Use force option to overwrite existing files'.format(filepath))
+                    'Warning: {0} already exists. Use force option to overwrite existing files'.format(filepath)
+                )
                 pass
             else:  # Something unexpected went wrong so reraise the exception.
                 raise

@@ -20,7 +20,7 @@ from docopt import docopt
 
 
 def main():
-    # instanstiate logger
+    # instantiate logger
     logger = logging.getLogger('quickrspecpuppet')
     logger.addHandler(logging.StreamHandler())
     logger.setLevel(logging.INFO)
