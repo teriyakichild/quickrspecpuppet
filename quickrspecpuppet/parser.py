@@ -10,22 +10,33 @@ logger = logging.getLogger('quickrspecpuppet')
 
 class ManifestParser(object):
 
+    MAN_DIR = 'manifests'
+
     def __init__(self, directory=None):
         self.classes = []
         if directory is None:
             directory = os.getcwd()
-        self._directory = directory
+        self.directory = directory
         self._manifests = self.find_manifests()
         self.class_name = None
+        self.dependencies = None
 
     def find_manifests(self):
+        """
+        Walk down the MAN_DIR directory inside the Parser's directory and collect all files with the .pp extensions
+        :return: list puppet files with a relative path to
+        """
         manifests = []
-        for dirpath, dirnames, filenames in os.walk('{0}/{1}'.format(self._directory, 'manifests')):
+        for dirpath, _, filenames in os.walk('{0}/{1}'.format(self.directory, self.MAN_DIR)):
             for filename in [f for f in filenames if f.endswith(".pp")]:
-                manifests.append(os.path.join(dirpath, filename))
+                manifests.append(os.path.join(dirpath, filename))  # TODO: would be better to use os.path.abspath here?
         return manifests
 
     def parse(self):
+        """
+
+        :return: None
+        """
         # parse the modulefile or metadata.json, if they exist.
         self.dependencies = []
         for name in self.parse_modulefile() + self.parse_metadata():
@@ -42,13 +53,23 @@ class ManifestParser(object):
                 resources['packages'] = self.parse_resources(
                     'package', filepath)
                 self.classes.append(PuppetClass(
-                    matches[0], filepath, resources, self._directory))
+                    matches[0], filepath, resources, self.directory))
 
     def parse_resources(self, resource_type, filepath):
+        """
+
+        :param resource_type:
+        :param filepath:
+        :return:
+        """
         return self.search_file(filepath, r"{0} {{ ['\"]?\K[a-zA-Z0-9_:\{{\}}\./$]+(?=['\"]?:)".format(resource_type))
 
     def parse_modulefile(self):
-        modulefile_path = '{0}/{1}'.format(self._directory, 'Modulefile')
+        """
+
+        :return:
+        """
+        modulefile_path = '{0}/{1}'.format(self.directory, 'Modulefile')
         if os.path.exists(modulefile_path):
             logger.debug(
                 'DEBUG: modulefile {0} exists'.format(modulefile_path))
@@ -56,7 +77,11 @@ class ManifestParser(object):
         return []
 
     def parse_metadata(self):
-        metadata_path = '{0}/{1}'.format(self._directory, 'metadata.json')
+        """
+
+        :return:
+        """
+        metadata_path = '{0}/{1}'.format(self.directory, 'metadata.json')
         if os.path.exists(metadata_path):
             logger.debug('DEBUG: metadata {0} exists'.format(metadata_path))
             try:
@@ -67,7 +92,14 @@ class ManifestParser(object):
             return [each['name'] for each in metadata.get('dependencies', [])]
         return []
 
-    def search_file(self, filepath, regex_string):
+    @staticmethod
+    def search_file(filepath, regex_string):
+        """
+
+        :param filepath:
+        :param regex_string:
+        :return:
+        """
         matches = [regex.search(regex_string, line)
                    for line in open(filepath)]
         if any(matches):
@@ -80,6 +112,13 @@ class ManifestParser(object):
 class PuppetClass(object):
 
     def __init__(self, name, manifest, resources, base_dir):
+        """
+
+        :param name:
+        :param manifest:
+        :param resources:
+        :param base_dir:
+        """
         self.base_dir = base_dir
         self.resources = resources
         self.name = name
@@ -87,6 +126,10 @@ class PuppetClass(object):
         self.test_filepath = self._generate_test_filepath()
 
     def _generate_test_filepath(self):
+        """
+
+        :return:
+        """
         parts = self.name.split('::')
         parts.pop(0)
         if len(parts) < 1:
@@ -97,6 +140,10 @@ class PuppetClass(object):
 class PuppetDependency(object):
 
     def __init__(self, name):
+        """
+
+        :param name:
+        """
         name_parts = re.split('[/-]', name)
         try:
             self.url = 'git@github.com:{0}/{1}.git'.format(*name_parts)
