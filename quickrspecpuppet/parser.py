@@ -146,7 +146,7 @@ class PuppetDependency(object):
         """
         name_parts = re.split('[/-]', name)
         try:
-            self.url = 'git@github.com:{0}/{1}.git'.format(*name_parts)
+            self.url = 'git@github.com:{0}/puppet-{1}.git'.format(*name_parts)
         except IndexError:
             raise Exception(
                 'Invalid format for puppet module name ({0}), should be "owner/repo_name"'.format(name))
