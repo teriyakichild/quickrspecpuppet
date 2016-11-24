@@ -3,7 +3,7 @@
 %define module_name quickrspecpuppet
 
 Name:           %{module_name}
-Version:        0.1.0
+Version:        0.1.1
 Release:        1
 Summary:        quickrspecpuppet - Quickly create basic rspec tests for your puppet modules
 
