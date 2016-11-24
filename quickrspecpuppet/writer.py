@@ -76,6 +76,7 @@ class TestWriter(object):
         """
         template_args = {'git_modules': self.dependencies,
                          'module_name': self.class_name}
+        logger.info('Writing {0}'.format(os.path.basename(self.fixtures_path)))
         self.write(self.fixtures_path, fixtures_template, template_args)
 
     def write(self, filepath, template, template_args):
