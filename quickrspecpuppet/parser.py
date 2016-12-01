@@ -44,7 +44,7 @@ class ManifestParser(object):
         # parse each manifest for classname and resources
         for filepath in self._manifests:
             matches = self.search_file(
-                filepath, r'class \K[a-zA-Z0-9_:]+(?= [{(])')
+                filepath, r'class \K[a-zA-Z0-9_:]+(?=\s?[{(])')
             resources = {}
             if any(matches):
                 self.class_name = matches[0].split('::')[0]
@@ -62,7 +62,7 @@ class ManifestParser(object):
         :param filepath:
         :return:
         """
-        return self.search_file(filepath, r"{0} {{ ['\"]?\K[a-zA-Z0-9_:\{{\}}\./$]+(?=['\"]?:)".format(resource_type))
+        return self.search_file(filepath, r"{0}\s?{{\s?['\"]?\K[a-zA-Z0-9_:\{{\}}\./$]+(?=['\"]?:)".format(resource_type))
 
     def parse_modulefile(self):
         """
